@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Approved - Panchakarma</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #20B2AA, #48D1CC);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #20B2AA;
+        }
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .success-icon {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #20B2AA, #48D1CC);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(32, 178, 170, 0.3);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            color: #20B2AA;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🌿</div>
+            <h1 style="margin: 0; font-size: 28px;">Panchakarma</h1>
+            <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Healthy Lifestyle with Ayurveda</p>
+        </div>
+        
+        <div class="content">
+            <div class="success-icon">✅</div>
+            <div class="title">Congratulations, {{name}}!</div>
+            <div class="message">
+                Your Panchakarma account has been approved! 🎉
+                <br><br>
+                You can now access all features of the platform and start providing healthcare services to our community.
+                <br><br>
+                <strong>What's next?</strong>
+                <br>
+                • Complete your profile setup<br>
+                • Upload your professional documents<br>
+                • Start accepting patient appointments<br>
+                • Access our healthcare resources
+            </div>
+            
+            <a href="https://panchakarma.com/dashboard" class="cta-button">
+                Access Your Dashboard
+            </a>
+            
+            <div class="message" style="font-size: 14px; color: #888;">
+                If you have any questions or need assistance, our support team is here to help.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© {{year}} Panchakarma. All rights reserved.</p>
+            <p>This email was sent to you as part of your Panchakarma account.</p>
+            <div class="social-links">
+                <a href="https://panchakarma.com">Website</a> |
+                <a href="mailto:{{supportEmail}}">Support</a> |
+                <a href="https://panchakarma.com/privacy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

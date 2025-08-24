@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Panchakarma</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .title {
+            color: #1f2937;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .message {
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .verification-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 3px solid #10b981;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .verification-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .code-label {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #10b981;
+            letter-spacing: 6px;
+            font-family: 'Courier New', monospace;
+            background: #ffffff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 2px dashed #10b981;
+            display: inline-block;
+            min-width: 200px;
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            color: #92400e;
+            position: relative;
+        }
+        
+        .warning::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #ffffff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .warning strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 30px 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .support-link {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .support-link:hover {
+            text-decoration: underline;
+        }
+        
+        .expiry-notice {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            color: #1e40af;
+            text-align: center;
+        }
+        
+        .expiry-notice strong {
+            color: #dc2626;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .code {
+                font-size: 28px;
+                letter-spacing: 4px;
+                min-width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🌿 Panchakarma</div>
+            <div class="subtitle">Email Verification</div>
+        </div>
+        
+        <div class="content">
+            <h1 class="title">Verify Your Email Address</h1>
+            
+            <p class="message">
+                Welcome to Panchakarma! 🌟 We're excited to have you join our community of wellness and Ayurvedic healing. 
+                To complete your registration and unlock access to your personalized health journey, please verify your email address.
+            </p>
+            
+            <div class="verification-box">
+                <div class="code-label">Verification Code</div>
+                <div class="code">{{verificationCode}}</div>
+            </div>
+            
+            <div class="expiry-notice">
+                ⏰ This verification code will expire in <strong>10 minutes</strong> for your security.
+            </div>
+            
+            <div class="warning">
+                <strong>Security Notice</strong>
+                Never share this verification code with anyone, including our support team. 
+                We will never ask for this code via phone, email, or any other communication method.
+            </div>
+            
+            <p class="message">
+                If you didn't create an account with Panchakarma, please ignore this email. 
+                For any questions or assistance, our support team is here to help at 
+                <a href="mailto:{{supportEmail}}" class="support-link">{{supportEmail}}</a>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {{year}} Panchakarma. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 600; color: #10b981;">Healthy Lifestyle with Ayurveda 🌿</p>
+        </div>
+    </div>
+</body>
+</html> 

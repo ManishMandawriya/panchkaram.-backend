@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Panchakarma</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .title {
+            color: #1f2937;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .message {
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #10b981;
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .feature-title {
+            color: #1f2937;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .feature-desc {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-title {
+            color: #1e40af;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 30px 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .social-links {
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: #10b981;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
+        }
+        
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🌿 Panchakarma</div>
+            <div class="welcome-text">Welcome to the Family!</div>
+            <div class="subtitle">Your journey to wellness begins now</div>
+        </div>
+        
+        <div class="content">
+            <h1 class="title">Welcome, {{name}}! 🎉</h1>
+            
+            <p class="message">
+                We're thrilled to have you join the Panchakarma family! You've just taken the first step towards a healthier, 
+                more balanced lifestyle through the ancient wisdom of Ayurveda. Get ready to embark on a transformative journey 
+                of wellness and healing.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🏥</span>
+                    <div class="feature-title">Expert Care</div>
+                    <div class="feature-desc">Access to qualified Ayurvedic doctors and wellness experts</div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🌿</span>
+                    <div class="feature-title">Natural Healing</div>
+                    <div class="feature-desc">Traditional Ayurvedic treatments and natural remedies</div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <div class="feature-title">Easy Access</div>
+                    <div class="feature-desc">Book appointments and manage your health journey online</div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">💚</span>
+                    <div class="feature-title">Holistic Wellness</div>
+                    <div class="feature-desc">Complete mind-body-spirit approach to health</div>
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <div class="cta-title">Ready to Start Your Wellness Journey?</div>
+                <p style="color: #1e40af; margin-bottom: 20px;">
+                    Explore our services, book your first consultation, or browse our wellness resources.
+                </p>
+                <a href="https://panchakarma.com/dashboard" class="cta-button">
+                    Get Started Now
+                </a>
+            </div>
+            
+            <p class="message">
+                If you have any questions or need assistance, our support team is here to help you every step of the way. 
+                We're committed to making your wellness journey as smooth and beneficial as possible.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {{year}} Panchakarma. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 600; color: #10b981;">Healthy Lifestyle with Ayurveda 🌿</p>
+            <div class="social-links">
+                <a href="https://panchakarma.com">Website</a> |
+                <a href="mailto:{{supportEmail}}">Support</a> |
+                <a href="https://panchakarma.com/privacy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
