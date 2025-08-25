@@ -43,7 +43,7 @@ export class DoctorReviewService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'profileImage'],
             where: { isActive: true },
             required: true,
           },
@@ -90,7 +90,7 @@ export class DoctorReviewService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'profileImage'],
             where: { isActive: true },
             required: true,
           },

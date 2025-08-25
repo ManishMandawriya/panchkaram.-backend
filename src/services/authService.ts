@@ -114,7 +114,7 @@ export class AuthService {
           userData.departmentId = data.departmentId;
           userData.experience = data.experience;
           userData.specializations = data.specializations || [];
-          userData.isApproved = false;
+          userData.isApproved = true;
           break;
         case UserRole.CLINIC:
           userData.clinicName = data.clinicName;

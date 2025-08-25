@@ -56,7 +56,7 @@ export class DoctorAppointmentService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'profileImage'],
             where: { isActive: true },
             required: true,
           },
@@ -105,7 +105,7 @@ export class DoctorAppointmentService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'profileImage'],
             where: { isActive: true },
             required: true,
           },
@@ -158,7 +158,7 @@ export class DoctorAppointmentService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'profileImage'],
             where: { isActive: true },
             required: true,
           },
@@ -207,7 +207,7 @@ export class DoctorAppointmentService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'profileImage'],
             where: { isActive: true },
             required: true,
           },
@@ -254,7 +254,7 @@ export class DoctorAppointmentService {
           {
             model: User,
             as: 'patient',
-            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'address'],
+            attributes: ['id', 'fullName', 'email', 'phoneNumber', 'gender', 'dateOfBirth', 'address', 'profileImage'],
             where: { isActive: true },
             required: false,
           },

@@ -7,7 +7,7 @@ import { DoctorTimeSlot } from '../models/DoctorTimeSlot';
 import { Appointment } from '../models/Appointment';
 import { UserRole } from '../types/auth';
 import { logger } from '../utils/logger';
-import { Op } from 'sequelize';
+import { col, fn, Op } from 'sequelize';
 
 export class DoctorService {
   // Helper method to generate time slots
@@ -133,11 +133,23 @@ export class DoctorService {
       });
 
       // Calculate ratings and review counts
-      const doctors = rows.map((doctor: any) => {
-        const reviews = doctor.reviews || [];
-        const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
-        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
-        const patientsCount = Math.floor(Math.random() * 5000) + 1000; // Mock data
+      const doctors =Promise.all( rows.map(async (doctor: any) => {
+
+        const result:any = await Review.findOne({
+          attributes: [
+            [fn("AVG", col("rating")), "averageRating"],
+            [fn("COUNT", col("rating")), "ratingCount"]
+          ],
+          where: { doctorId: doctor.id, isActive: true }
+        });
+        const averageRating = parseFloat(result.get("averageRating") || 0);
+        const totalRating = parseInt(result.get("ratingCount") || 0);
+
+  
+        // const reviews = doctor.reviews || [];
+        // const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+        // const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+        // const patientsCount = Math.floor(Math.random() * 5000) + 1000; // Mock data
 
         return {
           id: doctor.id,
@@ -148,11 +160,11 @@ export class DoctorService {
           departmentId: doctor.departmentId,
           experience: doctor.experience,
           rating: parseFloat(averageRating.toFixed(1)),
-          reviewsCount: reviews.length,
-          patientsCount,
+          reviewsCount: totalRating,
+          // patientsCount,
           profileImage: (doctor as any).profileImage || null,
         };
-      });
+      }));
 
       const totalPages = Math.ceil(count / limit);
 
@@ -189,15 +201,15 @@ export class DoctorService {
           isApproved: true,
         },
         include: [
-          {
-            model: Review,
-            as: 'reviews',
-            where: { isActive: true },
-            required: false,
-            attributes: ['rating', 'comment', 'createdAt'],
-            limit: 5,
-            order: [['createdAt', 'DESC']],
-          },
+          // {
+          //   model: Review,
+          //   as: 'reviews',
+          //   where: { isActive: true },
+          //   required: false,
+          //   attributes: ['rating', 'comment', 'createdAt'],
+          //   limit: 5,
+          //   order: [['createdAt', 'DESC']],
+          // },
           {
             model: Category,
             as: 'department',
@@ -241,10 +253,26 @@ export class DoctorService {
         };
       }
 
-      const reviews = (doctor as any).reviews || [];
-      const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
-      const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
-      const patientsCount = Math.floor(Math.random() * 5000) + 1000; // Mock data
+      const result:any = await Review.findOne({
+        attributes: [
+          [fn("AVG", col("rating")), "averageRating"],
+          [fn("COUNT", col("rating")), "ratingCount"]
+        ],
+        where: { doctorId: doctor.id, isActive: true }
+      });
+      const averageRating = parseFloat(result.get("averageRating") || 0);
+      const totalRating = parseInt(result.get("ratingCount") || 0);
+      const patientsCountResult = await Appointment.count({
+        distinct: true,
+        col: "patientId",
+        where: {
+          doctorId: doctor.id,
+          status: { [Op.ne]: "cancelled" },
+        },
+      });
+      const patientsCount = patientsCountResult || 0;
+
+
 
       // Format services for easy consumption from single record
       const doctorServicesRecord = (doctor as any).doctorServices;
@@ -343,7 +371,7 @@ export class DoctorService {
         departmentId: doctor.departmentId,
         experience: doctor.experience,
         rating: parseFloat(averageRating.toFixed(1)),
-        reviewsCount: reviews.length,
+        reviewsCount: totalRating,
         patientsCount,
         profileImage: (doctor as any).profileImage || null,
         biography: doctor.qualifications || 'Experienced doctor with excellent patient care.',
@@ -512,10 +540,21 @@ export class DoctorService {
         ],
       });
 
-      const topDoctors = doctors.map((doctor: any) => {
-        const reviews = doctor.reviews || [];
-        const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
-        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+      const topDoctors = Promise.all( doctors.map(async (doctor: any) => {
+        // const reviews = doctor.reviews || [];
+        // const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+        // const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+        const result:any = await Review.findOne({
+          attributes: [
+            [fn("AVG", col("rating")), "averageRating"],
+            [fn("COUNT", col("rating")), "ratingCount"]
+          ],
+          where: { doctorId: doctor.id, isActive: true }
+        });
+        const averageRating = parseFloat(result.get("averageRating") || 0);
+        const totalRating = parseInt(result.get("ratingCount") || 0);
+  
+
 
         return {
           id: doctor.id,
@@ -526,10 +565,10 @@ export class DoctorService {
           departmentId: doctor.departmentId,
           experience: doctor.experience,
           rating: parseFloat(averageRating.toFixed(1)),
-          reviewsCount: reviews.length,
+          reviewsCount: totalRating,
           profileImage: (doctor as any).profileImage || null,
         };
-      });
+      })); 
 
       return {
         success: true,

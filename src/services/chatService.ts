@@ -217,8 +217,8 @@ export class ChatService {
         },
         include: [
           { model: Chat, as: 'chat' },
-          { model: User, as: 'patient' },
-          { model: User, as: 'doctor' },
+          { model: User, as: 'patient', attributes: ['id', 'fullName', 'profileImage'] },
+          { model: User, as: 'doctor', attributes: ['id', 'fullName', 'profileImage'] },
         ],
       });
 
@@ -297,8 +297,8 @@ export class ChatService {
         },
         include: [
           { model: Chat, as: 'chat' },
-          { model: User, as: 'patient' },
-          { model: User, as: 'doctor' },
+          { model: User, as: 'patient', attributes: ['id', 'fullName', 'profileImage'] },
+          { model: User, as: 'doctor', attributes: ['id', 'fullName', 'profileImage'] },
         ],
       });
 
@@ -736,7 +736,7 @@ export class ChatService {
         where: {
           doctorId,
           patientId,
-          isActive: true,
+          // isActive: true,
         },
         include: [
           { model: User, as: 'patient', attributes: ['id', 'fullName', 'profileImage'] },
@@ -744,12 +744,12 @@ export class ChatService {
           {
             model: ChatSession,
             as: 'sessions',
-            where: { isActive: true },
+            // where: { isActive: true },
             include: [
               {
                 model: ChatMessage,
                 as: 'messages',
-                where: { isActive: true },
+                // where: { isActive: true },
                 include: [
                   { model: User, as: 'sender', attributes: ['id', 'fullName', 'profileImage'] },
                 ],
@@ -761,12 +761,12 @@ export class ChatService {
         ],
       });
 
-      if (!chat) {
-        return {
-          success: false,
-          message: 'Chat history not found',
-        };
-      }
+      // if (!chat) {
+      //   return {
+      //     success: false,
+      //     message: 'Chat history not found',
+      //   };
+      // }
 
       return {
         success: true,
