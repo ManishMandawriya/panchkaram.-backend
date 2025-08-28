@@ -513,6 +513,7 @@ export class AuthService {
       // Add aboutYourself field for doctors
       if (userRole === UserRole.DOCTOR && updateData.aboutYourself !== undefined) {
         updateObject.aboutYourself = updateData.aboutYourself;
+        updateObject.experience = updateData.experience;
       }
 
       // console.log('updateData----------------------------->',updateData);

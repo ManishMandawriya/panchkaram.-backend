@@ -79,14 +79,14 @@ export class DoctorService {
       const offset = (page - 1) * limit;
 
       // Build include array
-      const include = [
-        {
-          model: Review,
-          as: 'reviews',
-          where: { isActive: true },
-          required: false,
-          attributes: ['rating'],
-        },
+      const include :any= [
+        // {
+        //   model: Review,
+        //   as: 'reviews',
+        //   where: { isActive: true },
+        //   required: false,
+        //   attributes: ['rating'],
+        // },
         {
           model: Category,
           as: 'department',
@@ -105,7 +105,7 @@ export class DoctorService {
         ];
 
         // Also search in department name by adding a condition to the include
-        include[1] = {
+        include[0] = {
           model: Category,
           as: 'department',
           required: false,
@@ -129,11 +129,11 @@ export class DoctorService {
           'departmentId',
           'specialization',
           'experience',
+          'profileImage',
         ],
-      });
-
+      });      
       // Calculate ratings and review counts
-      const doctors =Promise.all( rows.map(async (doctor: any) => {
+      const doctors =await Promise.all( rows.map(async (doctor: any) => {
 
         const result:any = await Review.findOne({
           attributes: [
@@ -162,10 +162,12 @@ export class DoctorService {
           rating: parseFloat(averageRating.toFixed(1)),
           reviewsCount: totalRating,
           // patientsCount,
-          profileImage: (doctor as any).profileImage || null,
+          profileImage: doctor.profileImage || null,
         };
       }));
 
+      console.log('doctors--------------------------->',doctors);
+      
       const totalPages = Math.ceil(count / limit);
 
       return {
@@ -234,16 +236,16 @@ export class DoctorService {
             attributes: ['id', 'dayOfWeek', 'timeSlot', 'isAvailable', 'duration'],
           },
         ],
-        attributes: [
-          'id',
-          'fullName',
-          'doctorId',
-          'departmentId',
-          'specialization',
-          'experience',
-          'qualifications',
-          'profileImage',
-        ],
+        // attributes: [
+        //   'id',
+        //   'fullName',
+        //   'doctorId',
+        //   'departmentId',
+        //   'specialization',
+        //   'experience',
+        //   'qualifications',
+        //   'profileImage',
+        // ],
       });
 
       if (!doctor) {
@@ -375,6 +377,11 @@ export class DoctorService {
         patientsCount,
         profileImage: (doctor as any).profileImage || null,
         biography: doctor.qualifications || 'Experienced doctor with excellent patient care.',
+        qualifications:doctor.qualifications,
+        aboutYourself:doctor.aboutYourself,
+        degrees:doctor.degrees,
+        specializations:doctor.specializations,
+        documents:doctor.documents,
         services,
         availability,
         workingHours: [
@@ -537,10 +544,11 @@ export class DoctorService {
           'departmentId',
           'specialization',
           'experience',
+          'profileImage',
         ],
       });
 
-      const topDoctors = Promise.all( doctors.map(async (doctor: any) => {
+      const topDoctors =await Promise.all( doctors.map(async (doctor: any) => {
         // const reviews = doctor.reviews || [];
         // const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
         // const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;

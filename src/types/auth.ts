@@ -120,6 +120,7 @@ export interface UpdateProfileRequest {
   gender: 'male' | 'female' | 'other';
   dateOfBirth: string;
   aboutYourself?: string; // Optional field for doctors
+  experience?: string; // Optional field for doctors
   profileImage?: Express.Multer.File; // Optional profile image file
 }
 

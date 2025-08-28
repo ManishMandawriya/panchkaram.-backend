@@ -62,6 +62,14 @@ export const config = {
   FILE_URL: process.env.FILE_URL || 'http://localhost:3000/',
 
   DUMMY_USER_IMAGE: process.env.DUMMY_USER_IMAGE || 'http://localhost:3000/public/images/dummy-user.png',
+
+  //Agora
+  AGORA_APP_ID: process.env.AGORA_APP_ID || '',
+  AGORA_APP_CERTIFICATE: process.env.AGORA_APP_CERTIFICATE || '',
+  AGORA_APP_CERTIFICATE_SECRET: process.env.AGORA_APP_CERTIFICATE_SECRET || '',
+  AGORA_APP_CERTIFICATE_ID: process.env.AGORA_APP_CERTIFICATE_ID || '',
+  AGORA_APP_CERTIFICATE_SECRET_ID: process.env.AGORA_APP_CERTIFICATE_SECRET_ID || '',
+  AGORA_APP_CERTIFICATE_SECRET_SECRET: process.env.AGORA_APP_CERTIFICATE_SECRET_SECRET || '',
 };
 
 // Helper function to check if required env vars are set

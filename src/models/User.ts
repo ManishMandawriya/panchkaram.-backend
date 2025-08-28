@@ -30,7 +30,10 @@ import { DUMMY_USER_IMAGE, FILE_URL } from '../config/env';
 
   getterMethods: {
     profileImage() {
-      return this.getDataValue('profileImage') ? `${FILE_URL}${this.getDataValue('profileImage')}` : this.getDataValue('role') === UserRole.PATIENT ? DUMMY_USER_IMAGE : null;
+      const image = (String(this.getDataValue('profileImage')) && String(this.getDataValue('profileImage')) !== 'null') ?
+        `${FILE_URL}${String(this.getDataValue('profileImage'))}` :
+        this.getDataValue('role') === UserRole.PATIENT ? DUMMY_USER_IMAGE : null;
+      return image;
     },
   },
 })
