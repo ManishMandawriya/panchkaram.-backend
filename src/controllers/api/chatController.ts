@@ -11,6 +11,41 @@ export class ChatController {
     this.chatService = new ChatService();
   }
 
+  // POST /api/chat/join-session - Join a chat session
+  async joinSession(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user?.userId;
+      const userRole = (req as any).user?.role;
+      // Support both URL param and body sessionId
+      const sessionId = req.params.sessionId || req.body.sessionId;
+
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          message: 'Authentication required',
+        });
+        return;
+      }
+
+      if (!sessionId) {
+        res.status(400).json({
+          success: false,
+          message: 'Session ID is required',
+        });
+        return;
+      }
+
+      const result = await this.chatService.joinSession(userId, userRole, sessionId);
+      res.status(result.success ? 200 : 400).json(result);
+    } catch (error) {
+      logger.error('Join session controller error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to join session. Please try again.',
+      });
+    }
+  }
+
   // GET /api/chat/verify-session - Verify if user has an active session
   async verifySession(req: Request, res: Response): Promise<void> {
     try {
@@ -93,47 +128,7 @@ export class ChatController {
     }
   }
 
-  // POST /api/chat/sessions/:sessionId/join - Join a session
-  async joinSession(req: Request, res: Response): Promise<void> {
-    try {
-      const userId = (req as any).user?.userId;
-      const userRole = (req as any).user?.role;
-      const { sessionId } = req.params;
 
-      if (!userId) {
-        res.status(401).json({
-          success: false,
-          message: 'Authentication required',
-        });
-        return;
-      }
-
-      if (!userRole || !['patient', 'doctor'].includes(userRole)) {
-        res.status(400).json({
-          success: false,
-          message: 'Valid user role is required',
-        });
-        return;
-      }
-
-      if (!sessionId) {
-        res.status(400).json({
-          success: false,
-          message: 'Session ID is required',
-        });
-        return;
-      }
-
-      const result = await this.chatService.joinSession(parseInt(sessionId), userId, userRole);
-      res.status(result.success ? 200 : 400).json(result);
-    } catch (error) {
-      logger.error('Join session controller error:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to join session. Please try again.',
-      });
-    }
-  }
 
   // POST /api/chat/sessions/:id/messages - Send a message
   async sendMessage(req: Request, res: Response): Promise<void> {

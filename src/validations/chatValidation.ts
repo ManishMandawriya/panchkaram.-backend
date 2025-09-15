@@ -29,9 +29,11 @@ export const createSessionSchema = Joi.object({
 
 // Join session validation schema
 export const joinSessionSchema = Joi.object({
-  userRole: Joi.string().valid('patient', 'doctor').required().messages({
+  sessionId: Joi.string().optional().messages({
+    'string.base': 'Session ID must be a string',
+  }),
+  userRole: Joi.string().valid('patient', 'doctor').optional().messages({
     'any.only': 'User role must be either patient or doctor',
-    'any.required': 'User role is required',
   }),
 });
 

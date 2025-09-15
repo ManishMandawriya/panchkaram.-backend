@@ -12,6 +12,7 @@ import doctorServiceRoutes from './doctorServices';
 import bannerRoutes from './banners';
 import chatRoutes from './chat';
 import audioCallRoutes from './audioCall';
+import callRoutes from './calls';
 
 
 const router = Router();
@@ -118,6 +119,15 @@ router.get('/docs', (req, res) => {
         'PUT /audio-call/sessions/:sessionId/end': 'End an audio call session (public)',
         'POST /audio-call/sessions/:sessionId/refresh-token': 'Refresh token for a session (public)',
       },
+      calls: {
+        'POST /calls/initiate': 'Initiate a call (protected, doctor only)',
+        'POST /calls/answer': 'Answer a call (protected, patient only)',
+        'POST /calls/decline': 'Decline a call (protected, patient only)',
+        'POST /calls/end': 'End a call (protected)',
+        'GET /calls/active': 'Get active call (protected)',
+        'POST /calls/missed': 'Mark call as missed (protected)',
+        'GET /calls/status/:userId': 'Check if user is busy (protected)',
+      },
       services: {
         'GET /services': 'Get all services (public)',
         'GET /services/prices': 'Get service prices (public)',
@@ -163,6 +173,7 @@ router.use('/doctor', doctorServiceRoutes);
 router.use('/banners', bannerRoutes);
 router.use('/chat', chatRoutes);
 router.use('/audio-call', audioCallRoutes);
+router.use('/calls', callRoutes);
 
 // 404 for undefined routes
 router.use('*', (req, res) => {

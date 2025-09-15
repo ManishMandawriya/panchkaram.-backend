@@ -10,6 +10,7 @@ import {
   resetPasswordSchema,
   changePasswordSchema,
   updateProfileSchema,
+  deleteAccountRequestSchema,
 } from '../../validations/authValidation';
 
 const router = Router();
@@ -21,6 +22,7 @@ router.post('/login', validateRequest(loginSchema), authController.login.bind(au
 router.post('/forgot-password', validateRequest(forgotPasswordSchema), authController.forgotPassword.bind(authController));
 router.post('/verify-code', validateRequest(verifyCodeSchema), authController.verifyCode.bind(authController));
 router.post('/reset-password', validateRequest(resetPasswordSchema), authController.resetPassword.bind(authController));
+router.post('/delete-account-request', validateRequest(deleteAccountRequestSchema), authController.deleteAccountRequest.bind(authController));
 router.post('/refresh-token', authController.refreshToken.bind(authController));
 
 // Test routes (for development only)

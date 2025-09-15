@@ -42,6 +42,12 @@ router.post('/sessions/:sessionId/join',
   chatController.joinSession.bind(chatController)
 );
 
+// Alternative route for joining sessions with sessionId in body
+router.post('/join-session', 
+  validateRequest(joinSessionSchema),
+  chatController.joinSession.bind(chatController)
+);
+
 router.put('/sessions/:id/end', 
   validateRequest(endSessionSchema),
   chatController.endSession.bind(chatController)

@@ -66,10 +66,10 @@ export class ChatMessage extends Model {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
-    comment: 'Sender ID (patient or doctor)'
+    allowNull: true,
+    comment: 'Sender ID (patient or doctor), null for system messages'
   })
-  senderId!: number;
+  senderId?: number;
 
   @Column({
     type: DataType.ENUM(...Object.values(MessageType)),
@@ -196,7 +196,7 @@ export class ChatMessage extends Model {
   session!: ChatSession;
 
   @BelongsTo(() => User, { foreignKey: 'senderId', as: 'sender' })
-  sender!: User;
+  sender?: User;
 
   // Helper methods
   isFromPatient(): boolean {

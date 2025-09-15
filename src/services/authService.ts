@@ -802,4 +802,60 @@ export class AuthService {
       };
     }
   }
+
+  // Delete account request
+  async deleteAccountRequest(phoneNumber: string, password: string, reason?: string): Promise<AuthResponse> {
+    try {
+      // Find user by phone number
+      const user = await User.findOne({ where: { phoneNumber } });
+
+      if (!user) {
+        return {
+          success: false,
+          message: 'User not found with this mobile number'
+        };
+      }
+
+      if (!user.isActive) {
+        return {
+          success: false,
+          message: 'Account is already deactivated'
+        };
+      }
+
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return {
+          success: false,
+          message: 'Invalid password'
+        };
+      }
+
+      // Mark user as pending deletion (soft delete approach)
+      // user.isActive = false;
+      // user.updatedAt = new Date();
+      // await user.save();
+
+      // Log the deletion request
+      logger.info(`Delete account request submitted for user: ${user.email} (${user.phoneNumber}). Reason: ${reason || 'No reason provided'}`);
+
+      // TODO: In a real application, you would:
+      // 1. Send SMS notification to user
+      // 2. Store the deletion request in a separate table for admin review
+      // 3. Set up a scheduled job to permanently delete after 30 days
+      // 4. Send notification to admin team
+
+      return {
+        success: true,
+        message: 'Delete account request submitted successfully. Your account will be reviewed and processed within 24-48 hours.'
+      };
+    } catch (error) {
+      logger.error('Delete account request error:', error);
+      return {
+        success: false,
+        message: 'Failed to submit delete account request. Please try again.'
+      };
+    }
+  }
 } 

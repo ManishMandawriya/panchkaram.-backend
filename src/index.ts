@@ -29,18 +29,18 @@ const server = createServer(app);
 const PORT = CONFIG_PORT;
 
 // Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "https://cdn.socket.io", "'unsafe-inline'"],
-      scriptSrcAttr: ["'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "ws:", "wss:"],
-    },
-  },
-}));
+// app.use(helmet({
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       styleSrc: ["'self'", "'unsafe-inline'"],
+//       scriptSrc: ["'self'", "https://cdn.socket.io", "'unsafe-inline'"],
+//       scriptSrcAttr: ["'unsafe-inline'"],
+//       imgSrc: ["'self'", "data:", "https:"],
+//       connectSrc: ["'self'", "ws:", "wss:"],
+//     },
+//   },
+// }));
 
 // CORS configuration
 app.use(cors({
@@ -74,6 +74,10 @@ app.use(morgan('combined', {
   },
 }));
 
+// View engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../public'));
+
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -90,6 +94,11 @@ app.get('/', (req, res) => {
 // Chat test page route
 app.get('/chat-test.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/chat-test.html'));
+});
+
+// Delete account page route
+app.get('/delete-account', (req, res) => {
+  res.render('delete-account');
 });
 
 // Health check endpoint

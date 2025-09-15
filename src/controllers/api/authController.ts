@@ -566,4 +566,20 @@ export class AuthController {
       });
     }
   }
+
+  // POST /api/auth/delete-account-request
+  async deleteAccountRequest(req: Request, res: Response): Promise<void> {
+    try {
+      const { phoneNumber, password, reason } = req.body;
+
+      const result = await this.authService.deleteAccountRequest(phoneNumber, password, reason);
+      res.status(result.success ? 200 : 400).json(result);
+    } catch (error) {
+      logger.error('Delete account request controller error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to submit delete account request. Please try again.',
+      });
+    }
+  }
 } 

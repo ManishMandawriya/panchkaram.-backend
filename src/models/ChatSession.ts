@@ -23,8 +23,8 @@ export enum SessionStatus {
 
 export enum SessionType {
   CHAT = 'chat',
-  AUDIO_CALL = 'audioCall',
-  VIDEO_CALL = 'videoCall',
+  AUDIO_CALL = 'audio_call',
+  VIDEO_CALL = 'video_call',
 }
 
 @Table({
@@ -84,6 +84,98 @@ export class ChatSession extends Model {
     comment: 'Secure token or provider token'
   })
   sessionToken?: string;
+
+  // Call-related fields
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    comment: 'Agora channel name for calls'
+  })
+  agoraChannelName?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    comment: 'Agora app ID'
+  })
+  agoraAppId?: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    comment: 'Caller Agora token'
+  })
+  callerAgoraToken?: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    comment: 'Caller Agora UID'
+  })
+  callerAgoraUid?: number;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+    comment: 'Receiver Agora token'
+  })
+  receiverAgoraToken?: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    comment: 'Receiver Agora UID'
+  })
+  receiverAgoraUid?: number;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    comment: 'When call was initiated'
+  })
+  callInitiatedAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    comment: 'When call started ringing'
+  })
+  callRingingAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    comment: 'When call was answered'
+  })
+  callAnsweredAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    comment: 'When call actually started'
+  })
+  callStartedAt?: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    comment: 'When call ended'
+  })
+  callEndedAt?: Date;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    comment: 'Who ended the call: caller, receiver, or system'
+  })
+  callEndedBy?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    comment: 'Reason for call ending'
+  })
+  callEndReason?: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(SessionStatus)),
@@ -194,5 +286,55 @@ export class ChatSession extends Model {
 
   markDoctorJoined(): void {
     this.doctorJoinedAt = new Date();
+  }
+
+  // Call management methods
+  initiateCall(channelName: string, appId: string, callerToken: string, callerUid: number): void {
+    this.agoraChannelName = channelName;
+    this.agoraAppId = appId;
+    this.callerAgoraToken = callerToken;
+    this.callerAgoraUid = callerUid;
+    this.callInitiatedAt = new Date();
+    this.status = SessionStatus.ONGOING;
+  }
+
+  startCallRinging(): void {
+    this.callRingingAt = new Date();
+  }
+
+  answerCall(receiverToken: string, receiverUid: number): void {
+    this.receiverAgoraToken = receiverToken;
+    this.receiverAgoraUid = receiverUid;
+    this.callAnsweredAt = new Date();
+    this.callStartedAt = new Date();
+  }
+
+  endCall(endedBy: string, reason?: string): void {
+    this.callEndedAt = new Date();
+    this.callEndedBy = endedBy;
+    this.callEndReason = reason;
+    this.status = SessionStatus.ENDED;
+    this.endTime = new Date();
+    this.duration = this.getDurationInSeconds();
+  }
+
+  isCallActive(): boolean {
+    return this.callStartedAt && !this.callEndedAt;
+  }
+
+  getCallDuration(): number {
+    if (!this.callStartedAt || !this.callEndedAt) {
+      return 0;
+    }
+    return Math.floor((this.callEndedAt.getTime() - this.callStartedAt.getTime()) / 1000);
+  }
+
+  getCallStatus(): string {
+    if (this.callEndedAt) return 'ended';
+    if (this.callStartedAt) return 'ongoing';
+    if (this.callAnsweredAt) return 'answered';
+    if (this.callRingingAt) return 'ringing';
+    if (this.callInitiatedAt) return 'initiated';
+    return 'none';
   }
 }

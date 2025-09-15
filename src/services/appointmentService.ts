@@ -37,6 +37,12 @@ export class AppointmentService {
   // Create a new appointment
   async createAppointment(patientId: number, appointmentData: CreateAppointmentRequest) {
     try {
+      // Debug logging
+      logger.info('Creating appointment', { 
+        patientId, 
+        doctorId: appointmentData.doctorId, 
+        serviceType: appointmentData.serviceType 
+      });
       // Check if doctor exists and is approved
       const doctor = await User.findOne({
         where: {
@@ -190,7 +196,9 @@ export class AppointmentService {
           default:
             sessionType = SessionType.CHAT;
         }
-
+        console.log('appointmentData--------------------------->', appointmentData);
+        console.log('sessionType--------------------------->', sessionType);
+// return
         // Create chat session
         const chatSession = await ChatSession.create({
           chatId: chat.id,
@@ -217,7 +225,7 @@ export class AppointmentService {
         data: { appointment },
       };
     } catch (error) {
-      logger.error('Create appointment service error:', error);
+      logger.error('Create appointment service error:', error?.message);
       return {
         success: false,
         message: 'Failed to create appointment',

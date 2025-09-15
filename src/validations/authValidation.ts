@@ -206,4 +206,29 @@ export const updateProfileSchema = Joi.object({
   aboutYourself: Joi.string().optional().messages({
     'string.base': 'About yourself must be a string',
   }),
+});
+
+// Delete account request validation schema
+export const deleteAccountRequestSchema = Joi.object({
+  phoneNumber: Joi.string()
+    .pattern(/^[0-9]{10}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Please enter a valid 10-digit mobile number',
+      'any.required': 'Mobile number is required',
+    }),
+  password: Joi.string()
+    .min(6)
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 6 characters long',
+      'any.required': 'Password is required',
+    }),
+  reason: Joi.string()
+    .max(500)
+    .optional()
+    .allow('')
+    .messages({
+      'string.max': 'Reason cannot exceed 500 characters',
+    }),
 }); 

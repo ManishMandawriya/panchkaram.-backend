@@ -46,6 +46,106 @@ export class ChatService {
     this.doctorService = new DoctorService();
   }
 
+  // Join a chat session
+  async joinSession(userId: number, userRole: string, sessionId: string) {
+    try {
+      // Find the session
+      const session = await ChatSession.findOne({
+        where: { sessionId, isActive: true },
+        include: [
+          { model: Chat, as: 'chat' },
+          { model: User, as: 'patient', attributes: ['id', 'fullName', 'profileImage'] }, 
+          { model: User, as: 'doctor', attributes: ['id', 'fullName', 'profileImage'] }
+        ]
+      });
+
+      if (!session) {
+        return {
+          success: false,
+          message: 'Session not found',
+        };
+      }
+
+      // Verify user has access to this session
+      if (session.patientId !== userId && session.doctorId !== userId) {
+        return {
+          success: false,
+          message: 'Access denied to this session',
+        };
+      }
+
+      // Check if session can be joined
+      if (![SessionStatus.SCHEDULED, SessionStatus.ONGOING].includes(session.status)) {
+        return {
+          success: false,
+          message: 'Session cannot be joined in its current state',
+        };
+      }
+
+      // Update join timestamps
+      const updateData: any = {
+        // status: SessionStatus.ONGOING,
+      };
+      if (userRole === 'patient' && !session.patientJoinedAt) {
+        updateData.patientJoinedAt = new Date();
+      } else if (userRole === 'doctor' && !session.doctorJoinedAt) {
+        updateData.doctorJoinedAt = new Date();
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await session.update(updateData);
+        await session.reload(); // Reload to get updated data
+      }
+      console.log('patientJoinedAt--------------------------->', session.patientJoinedAt, session.doctorJoinedAt, session.status);
+      // If both participants have joined and session is scheduled, mark as ongoing
+      if (session.patientJoinedAt || session.doctorJoinedAt || session.status === SessionStatus.SCHEDULED) {
+        await session.update({ 
+          status: SessionStatus.ONGOING,
+          startTime: new Date()
+        });
+        await session.reload();
+      }
+
+      return {
+        success: true,
+        message: 'Successfully joined session',
+        data: {
+          session: {
+            id: session.id,
+            sessionId: session.sessionId,
+            status: session.status,
+            sessionType: session.sessionType,
+            startTime: session.startTime,
+            endTime: session.endTime,
+            patientJoinedAt: session.patientJoinedAt,
+            doctorJoinedAt: session.doctorJoinedAt,
+            duration: session.duration,
+            participants: {
+              patient: { 
+                id: session.patientId, 
+                name: session.patient?.fullName,
+                profileImage: session.patient?.profileImage,
+                hasJoined: !!session.patientJoinedAt
+              },
+              doctor: { 
+                id: session.doctorId, 
+                name: session.doctor?.fullName,
+                profileImage: session.doctor?.profileImage,
+                hasJoined: !!session.doctorJoinedAt
+              }
+            }
+          }
+        }
+      };
+    } catch (error) {
+      logger.error('Join session service error:', error);
+      return {
+        success: false,
+        message: 'Failed to join session',
+      };
+    }
+  }
+
   // Verify if user has an active session
   async verifySession(userId: number, userRole: string) {
     try {
@@ -207,85 +307,7 @@ export class ChatService {
     }
   }
 
-  // Join a session
-  async joinSession(sessionId: number, userId: number, userRole: string) {
-    try {
-      const session = await ChatSession.findOne({
-        where: {
-          sessionId: sessionId.toString(),
-          isActive: true,
-        },
-        include: [
-          { model: Chat, as: 'chat' },
-          { model: User, as: 'patient', attributes: ['id', 'fullName', 'profileImage'] },
-          { model: User, as: 'doctor', attributes: ['id', 'fullName', 'profileImage'] },
-        ],
-      });
 
-      if (!session) {
-        return {
-          success: false,
-          message: 'Session not found',
-        };
-      }
-
-      // Validate user is part of the session
-      if (userId !== session.patientId && userId !== session.doctorId) {
-        return {
-          success: false,
-          message: 'Unauthorized to join this session',
-        };
-      }
-
-      if (!session.canJoin()) {
-        return {
-          success: false,
-          message: 'Session is not available for joining',
-        };
-      }
-
-      // Mark user as joined
-      if (userRole === 'patient') {
-        session.markPatientJoined();
-      } else if (userRole === 'doctor') {
-        session.markDoctorJoined();
-      }
-
-      // If both participants have joined, mark session as ongoing
-      if (session.patientJoinedAt && session.doctorJoinedAt && session.status === SessionStatus.SCHEDULED) {
-        session.markAsStarted();
-      }
-
-      await session.save();
-
-      // Send system message
-      const joinMessage = `${userRole === 'patient' ? session.patient.fullName : session.doctor.fullName} joined the session`;
-      await this.sendSystemMessage(session.id, joinMessage);
-
-      return {
-        success: true,
-        message: 'Successfully joined session',
-        data: {
-          session: {
-            id: session.id,
-            sessionId: session.sessionId,
-            status: session.status,
-            sessionType: session.sessionType,
-            startTime: session.startTime,
-            patientJoinedAt: session.patientJoinedAt,
-            doctorJoinedAt: session.doctorJoinedAt,
-          },
-        },
-      };
-    } catch (error) {
-      logger.error('Join session error:', error);
-      return {
-        success: false,
-        message: 'Failed to join session',
-        error,
-      };
-    }
-  }
 
   // Send a message
   async sendMessage(data: SendMessageData) {
